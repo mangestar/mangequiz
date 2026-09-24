@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>망개 퀴즈 🌸✨ - 아기자기 화려한 퀴즈 세상</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts (Jua & Gaegu) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap" rel="stylesheet">
+    
+    <!-- React & Babel CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.6/babel.min.js"></script>
+    
+    <!-- Canvas Confetti CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        manggae: {
+                            pink: '#FF70A6',
+                            lightpink: '#FFD6E0',
+                            purple: '#9B5DE5',
+                            lightpurple: '#E2D4F9',
+                            yellow: '#FFD166',
+                            deep: '#7000FF'
+                        }
+                    },
+                    fontFamily: {
+                        jua: ['Jua', 'sans-serif'],
+                        gaegu: ['Gaegu', 'cursive']
+                    },
+                    animation: {
+                        'float': 'float 3s ease-in-out infinite',
+                        'bounce-soft': 'bounceSoft 2s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+                            '50%': { transform: 'translateY(-8px) rotate(2deg)' },
+                        },
+                        bounceSoft: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { boxShadow: '0 0 15px rgba(255, 112, 166, 0.6), 0 0 30px rgba(155, 93, 229, 0.4)' },
+                            '50%': { boxShadow: '0 0 25px rgba(255, 112, 166, 0.9), 0 0 45px rgba(155, 93, 229, 0.7)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            font-family: 'Jua', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #FFD6E0 0%, #E2D4F9 50%, #FFC8DD 100%);
+            min-height: 100vh;
+            color: #4A154B;
+        }
+        
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(12px);
+            border: 3px solid rgba(255, 182, 217, 0.7);
+            box-shadow: 0 10px 30px rgba(155, 93, 229, 0.15);
+        }
+
+        .sparkle-bg {
+            background-image: radial-gradient(rgba(255, 112, 166, 0.25) 2px, transparent 2px), radial-gradient(rgba(155, 93, 229, 0.25) 2px, transparent 2px);
+            background-size: 30px 30px;
+            background-position: 0 0, 15px 15px;
+        }
+
+        .btn-manggae-primary {
+            background: linear-gradient(135deg, #FF70A6 0%, #9B5DE5 100%);
+            color: white;
+            box-shadow: 0 5px 0px #7000FF, 0 8px 15px rgba(255, 112, 166, 0.4);
+            transition: all 0.15s ease;
+        }
+        .btn-manggae-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 7px 0px #7000FF, 0 12px 20px rgba(255, 112, 166, 0.5);
+        }
+        .btn-manggae-primary:active {
+            transform: translateY(3px);
+            box-shadow: 0 2px 0px #7000FF;
+        }
+
+        .btn-manggae-secondary {
+            background: #FFF0F5;
+            color: #9B5DE5;
+            border: 2px solid #FF70A6;
+            box-shadow: 0 4px 0px #FF70A6;
+            transition: all 0.15s ease;
+        }
+        .btn-manggae-secondary:hover {
+            background: #FFE4EC;
+            transform: translateY(-2px);
+        }
+        .btn-manggae-secondary:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0px #FF70A6;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #FFD6E0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #FF70A6; border-radius: 10px; }
+    </style>
+</head>
+
+<body class="sparkle-bg flex flex-col min-h-screen">
+
+    <div id="root" class="flex-grow flex flex-col justify-center items-center p-4">
+        <div className="glass-panel p-8 rounded-3xl text-center space-y-4 animate-bounce-soft max-w-sm w-full bg-white/90">
+            <div className="text-5xl">🌸</div>
+            <div className="text-xl font-extrabold text-purple-900">망개 퀴즈 불러오는 중...</div>
+            <p className="text-xs text-purple-600 font-bold">잠시만 기다려주세요!</p>
+        </div>
+    </div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const DEFAULT_QUESTIONS = [
+            {
+                id: 1,
+                type: 'multiple',
+                question: '🌸 망개떡의 겉을 싸고 있는 잎은 무슨 나무의 잎일까요?',
+                score: 30,
+                explanation: '망개떡은 망개나무(청미래덩굴) 잎으로 싸서 만든 경남 의령의 명물 특산 떡입니다!',
+                options: ['단풍나무 잎', '망개나무 (청미래덩굴) 잎', '바나나 잎', '깻잎', '연잎', '뽕나무 잎'],
+                correctAnswer: 1
+            },
+            {
+                id: 2,
+                type: 'ox',
+                question: '✨ 망개잎으로 떡을 싸두면 떡이 상하는 것을 막아주는 효과가 있다?',
+                score: 30,
+                explanation: '망개잎에는 천연 방부 작용을 하는 성분이 있어 떡을 잘 상하지 않게 해줍니다!',
+                options: ['O', 'X'],
+                correctAnswer: 'O'
+            },
+            {
+                id: 3,
+                type: 'short',
+                question: '🎀 망개떡 속에 가득 들어있는 부드럽고 달콤한 소(앙금)의 재료는 무엇일까요?',
+                score: 40,
+                explanation: '달콤한 팥앙금이 쫀득한 찹쌀떡 속에 들어가 매력을 더해줍니다!',
+                options: [],
+                correctAnswer: ['팥', '팥앙금', '팥소', '적앙금']
+            }
+        ];
+
+        const DEFAULT_SUBMISSIONS = [
+            {
+                id: 'sub_1',
+                userName: '떡순이🌸',
+                score: 100,
+                totalScore: 100,
+                submittedAt: '2026.09.25 10:00',
+                answers: {
+                    1: { userAns: 1, isCorrect: true, scoreEarned: 30 },
+                    2: { userAns: 'O', isCorrect: true, scoreEarned: 30 },
+                    3: { userAns: '팥', isCorrect: true, scoreEarned: 40 }
+                }
+            },
+            {
+                id: 'sub_2',
+                userName: '분홍이🎀',
+                score: 60,
+                totalScore: 100,
+                submittedAt: '2026.09.25 11:20',
+                answers: {
+                    1: { userAns: 1, isCorrect: true, scoreEarned: 30 },
+                    2: { userAns: 'O', isCorrect: true, scoreEarned: 30 },
+                    3: { userAns: '콩가루', isCorrect: false, scoreEarned: 0 }
+                }
+            }
+        ];
+
+        function App() {
+            const [view, setView] = useState('home');
+            
+            // App Core State with LocalStorage Persistence
+            const [questions, setQuestions] = useState(() => {
+                const saved = localStorage.getItem('manggae_questions');
+                return saved ? JSON.parse(saved) : DEFAULT_QUESTIONS;
+            });
+
+            const [submissions, setSubmissions] = useState(() => {
+                const saved = localStorage.getItem('manggae_submissions');
+                return saved ? JSON.parse(saved) : DEFAULT_SUBMISSIONS;
+            });
+
+            const [adminPassword, setAdminPassword] = useState(() => {
+                const saved = localStorage.getItem('manggae_admin_password');
+                return saved ? saved : '1234';
+            });
+
+            const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
+
+            // Quiz Play Session State
+            const [userName, setUserName] = useState('');
+            const [currentQIndex, setCurrentQIndex] = useState(0);
+            const [userAnswers, setUserAnswers] = useState({});
+            const [lastSubmission, setLastSubmission] = useState(null);
+
+            // UI Modals & Alerts
+            const [showLoginModal, setShowLoginModal] = useState(false);
+            const [loginInput, setLoginInput] = useState('');
+            const [loginError, setLoginError] = useState('');
+            const [customAlert, setCustomAlert] = useState(null);
+
+            // Save to LocalStorage whenever state changes
+            useEffect(() => {
+                localStorage.setItem('manggae_questions', JSON.stringify(questions));
+            }, [questions]);
+
+            useEffect(() => {
+                localStorage.setItem('manggae_submissions', JSON.stringify(submissions));
+            }, [submissions]);
+
+            useEffect(() => {
+                localStorage.setItem('manggae_admin_password', adminPassword);
+            }, [adminPassword]);
+
+            const showAlert = (message, type = 'info') => {
+                setCustomAlert({ message, type });
+            };
+
+            const handleAdminLogin = (e) => {
+                e.preventDefault();
+                if (loginInput === adminPassword) {
+                    setIsAdminLoggedIn(true);
+                    setShowLoginModal(false);
+                    setLoginInput('');
+                    setLoginError('');
+                    setView('admin');
+                    showAlert('✨ 관리자 모드가 해금되었습니다! ✨', 'success');
+                } else {
+                    setLoginError('비밀번호가 올바르지 않습니다! 🔑');
+                }
+            };
+
+            const handleLogoutAdmin = () => {
+                setIsAdminLoggedIn(false);
+                setView('home');
+                showAlert('관리자 모드에서 로그아웃되었습니다.', 'info');
+            };
+
+            const startQuiz = () => {
+                if (!userName.trim()) {
+                    showAlert('이름(닉네임)을 입력해주세요! 🌸', 'warning');
+                    return;
+                }
+                if (questions.length === 0) {
+                    showAlert('등록된 퀴즈가 없습니다! 관리자에게 문의하세요. 😭', 'warning');
+                    return;
+                }
+                setCurrentQIndex(0);
+                setUserAnswers({});
+                setView('quiz');
+            };
+
+            const handleAnswerSelect = (questionId, answer) => {
+                setUserAnswers(prev => ({
+                    ...prev,
+                    [questionId]: answer
+                }));
+            };
+
+            const handleFinishQuiz = () => {
+                let totalPossible = 0;
+                let userScore = 0;
+                const detailedAnswers = {};
+
+                questions.forEach(q => {
+                    totalPossible += Number(q.score || 0);
+                    const userAns = userAnswers[q.id];
+                    let isCorrect = false;
+
+                    if (q.type === 'multiple' || q.type === 'ox') {
+                        isCorrect = userAns === q.correctAnswer;
+                    } else if (q.type === 'short') {
+                        const formattedUserAns = (userAns || '').toString().trim().toLowerCase();
+                        if (Array.isArray(q.correctAnswer)) {
+                            isCorrect = q.correctAnswer.some(ans => ans.toString().trim().toLowerCase() === formattedUserAns);
+                        } else {
+                            isCorrect = formattedUserAns === (q.correctAnswer || '').toString().trim().toLowerCase();
+                        }
+                    }
+
+                    const earned = isCorrect ? Number(q.score || 0) : 0;
+                    userScore += earned;
+
+                    detailedAnswers[q.id] = {
+                        userAns: userAns !== undefined ? userAns : '(미응답)',
+                        isCorrect,
+                        scoreEarned: earned
+                    };
+                });
+
+                const newSub = {
+                    id: 'sub_' + Date.now(),
+                    userName: userName.trim(),
+                    score: userScore,
+                    totalScore: totalPossible,
+                    submittedAt: new Date().toLocaleString('ko-KR', {
+                        year: 'numeric', month: '2-digit', day: '2-digit',
+                        hour: '2-digit', minute: '2-digit'
+                    }),
+                    answers: detailedAnswers
+                };
+
+                setSubmissions(prev => [newSub, ...prev]);
+                setLastSubmission(newSub);
+                setView('result');
+
+                if (window.confetti) {
+                    confetti({ particleCount: 120, spread: 80, origin: { y: 0.6 } });
+                }
+            };
+
+            return (
+                <div className="flex flex-col min-h-screen w-full">
+                    {}
+                    <header className="bg-white/80 backdrop-blur-md border-b-4 border-pink-300 sticky top-0 z-40 px-4 py-3 shadow-md">
+                        <div className="max-w-4xl mx-auto flex items-center justify-between">
+                            <div onClick={() => setView('home')} className="cursor-pointer flex items-center gap-2 group">
+                                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-manggae-pink to-manggae-purple flex items-center justify-center text-white font-bold text-xl shadow-md group-hover:rotate-12 transition-transform">
+                                    🌸
+                                </div>
+                                <div>
+                                    <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-pink-500 via-purple-600 to-indigo-500 bg-clip-text text-transparent">
+                                        망개 퀴즈✨
+                                    </h1>
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                {isAdminLoggedIn ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold border border-purple-300 hidden sm:inline">
+                                            🔓 관리자 모드
+                                        </span>
+                                        <button 
+                                            onClick={() => setView('admin')} 
+                                            className={`px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm ${
+                                                view === 'admin' ? 'bg-manggae-purple text-white' : 'bg-pink-100 text-pink-700'
+                                            }`}
+                                        >
+                                            대시보드
+                                        </button>
+                                        <button onClick={handleLogoutAdmin} className="px-2.5 py-1.5 bg-gray-200 text-gray-700 rounded-xl font-bold text-xs">
+                                            🚪
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button 
+                                        onClick={() => setShowLoginModal(true)}
+                                        className="px-3 py-1.5 bg-gradient-to-r from-pink-400 to-purple-500 text-white rounded-2xl font-bold text-xs sm:text-sm shadow-md"
+                                    >
+                                        🔒 관리자 잠금해제
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                    </header>
+
+                    {/* Modals */}
+                    {customAlert && (
+                        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="glass-panel max-w-sm w-full p-6 rounded-3xl text-center space-y-4 animate-bounce-soft">
+                                <div className="text-4xl">{customAlert.type === 'success' ? '💖' : customAlert.type === 'warning' ? '⚠️' : '🌸'}</div>
+                                <p className="text-lg font-bold text-gray-800">{customAlert.message}</p>
+                                <button onClick={() => setCustomAlert(null)} className="w-full py-2.5 btn-manggae-primary rounded-2xl font-bold">확인 💕</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {showLoginModal && (
+                        <div className="fixed inset-0 bg-purple-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="glass-panel max-w-sm w-full p-6 rounded-3xl space-y-4">
+                                <div className="text-center space-y-1">
+                                    <div className="text-4xl">🔐</div>
+                                    <h3 className="text-xl font-bold text-purple-900">관리자 비밀번호</h3>
+                                    <p className="text-xs text-purple-600">초기 비밀번호: <span className="font-bold underline">1234</span></p>
+                                </div>
+                                <form onSubmit={handleAdminLogin} className="space-y-3">
+                                    <input 
+                                        type="password"
+                                        placeholder="비밀번호 입력..."
+                                        value={loginInput}
+                                        onChange={(e) => setLoginInput(e.target.value)}
+                                        className="w-full px-4 py-3 rounded-2xl border-2 border-pink-300 focus:border-purple-500 text-center font-bold text-lg"
+                                        autoFocus
+                                    />
+                                    {loginError && <p className="text-xs text-red-500 text-center font-bold">{loginError}</p>}
+                                    <div className="flex gap-2">
+                                        <button type="button" onClick={() => setShowLoginModal(false)} className="w-1/2 py-2.5 btn-manggae-secondary rounded-2xl font-bold text-sm">취소</button>
+                                        <button type="submit" className="w-1/2 py-2.5 btn-manggae-primary rounded-2xl font-bold text-sm">해금 🔑</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Dynamic View Controller */}
+                    <main className="flex-grow max-w-4xl w-full mx-auto p-4 sm:p-6 flex flex-col justify-center">
+                        {view === 'home' && (
+                            <HomeView 
+                                userName={userName} 
+                                setUserName={setUserName} 
+                                startQuiz={startQuiz}
+                                questionsCount={questions.length}
+                                submissions={submissions}
+                            />
+                        )}
+
+                        {view === 'quiz' && (
+                            <QuizPlayView 
+                                questions={questions}
+                                currentQIndex={currentQIndex}
+                                setCurrentQIndex={setCurrentQIndex}
+                                userAnswers={userAnswers}
+                                handleAnswerSelect={handleAnswerSelect}
+                                handleFinishQuiz={handleFinishQuiz}
+                            />
+                        )}
+
+                        {view === 'result' && (
+                            <QuizResultView 
+                                lastSubmission={lastSubmission}
+                                submissions={submissions}
+                                setView={setView}
+                            />
+                        )}
+
+                        {view === 'admin' && isAdminLoggedIn && (
+                            <AdminDashboardView 
+                                questions={questions}
+                                setQuestions={setQuestions}
+                                submissions={submissions}
+                                setSubmissions={setSubmissions}
+                                adminPassword={adminPassword}
+                                setAdminPasswordState={setAdminPassword}
+                                showAlert={showAlert}
+                            />
+                        )}
+                    </main>
+
+                    <footer className="text-center py-4 text-xs font-bold text-purple-600/80">
+                        망개 퀴즈 🌸✨ • 파스텔 & 퍼플 로맨틱 퀴즈 에디션
+                    </footer>
+                </div>
+            );
+        }
+
+        function HomeView({ userName, setUserName, startQuiz, questionsCount, submissions }) {
+            const top3Submissions = [...submissions].sort((a, b) => b.score - a.score).slice(0, 3);
+
+            return (
+                <div className="space-y-6 my-auto">
+                    <div className="glass-panel p-6 sm:p-10 rounded-3xl text-center space-y-6 border-4 border-pink-300">
+                        <div className="space-y-2">
+                            <span className="px-4 py-1.5 bg-pink-100 text-pink-600 rounded-full text-xs font-extrabold border border-pink-300">✨ WELCOME TO MANGGAE QUIZ ✨</span>
+                            <h2 className="text-4xl sm:text-5xl font-black text-purple-900 pt-2">망개 퀴즈 🌸</h2>
+                            <p className="text-purple-700 text-sm font-bold">총 <span className="text-pink-600 text-lg font-black">{questionsCount}</span>개의 재미있는 퀴즈가 준비되어 있어요!</p>
+                        </div>
+
+                        <div className="max-w-md mx-auto space-y-3">
+                            <label className="block text-sm font-bold text-purple-800">🎀 참가할 닉네임(이름)을 적어주세요!</label>
+                            <input 
+                                type="text"
+                                placeholder="예: 떡순이, 퀴즈천재..."
+                                value={userName}
+                                onChange={(e) => setUserName(e.target.value)}
+                                className="w-full px-5 py-3.5 rounded-2xl border-3 border-pink-300 focus:border-purple-500 text-center text-lg font-bold bg-white"
+                            />
+                            <button onClick={startQuiz} className="w-full py-4 btn-manggae-primary text-xl font-black rounded-2xl">
+                                🚀 퀴즈 시작하기!
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="glass-panel p-6 rounded-3xl border-2 border-purple-200">
+                        <h3 className="text-xl font-black text-purple-900 mb-4">👑 명예의 전당 (TOP 3)</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            {top3Submissions.length > 0 ? (
+                                top3Submissions.map((sub, idx) => (
+                                    <div key={sub.id || idx} className="p-4 rounded-2xl border-2 text-center bg-white/90 border-pink-300 space-y-1">
+                                        <div className="text-sm font-black">{['🥇 1등', '🥈 2등', '🥉 3등'][idx]}</div>
+                                        <div className="text-xl font-black truncate text-purple-900">{sub.userName}</div>
+                                        <div className="text-2xl font-black text-pink-600">{sub.score}점</div>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="col-span-3 text-center py-4 text-purple-400 font-bold text-sm">아직 참여자가 없어요! 첫 번째 주인공이 되어보세요! 🌸</div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function QuizPlayView({ questions, currentQIndex, setCurrentQIndex, userAnswers, handleAnswerSelect, handleFinishQuiz }) {
+            const currentQ = questions[currentQIndex];
+            const progressPercent = Math.round(((currentQIndex + 1) / questions.length) * 100);
+            const isLastQuestion = currentQIndex === questions.length - 1;
+            const currentAns = userAnswers[currentQ.id];
+
+            return (
+                <div className="space-y-6 my-auto max-w-2xl mx-auto w-full">
+                    <div className="glass-panel p-4 rounded-2xl space-y-2 border-2 border-pink-300">
+                        <div className="flex justify-between items-center text-xs font-extrabold text-purple-800">
+                            <span>문제 {currentQIndex + 1} / {questions.length}</span>
+                            <span className="bg-pink-100 text-pink-600 px-2 py-0.5 rounded-full">배점: {currentQ.score}점</span>
+                        </div>
+                        <div className="w-full h-4 bg-pink-100 rounded-full overflow-hidden p-0.5">
+                            <div className="h-full bg-gradient-to-r from-pink-400 to-purple-500 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+                        </div>
+                    </div>
+
+                    <div className="glass-panel p-6 sm:p-8 rounded-3xl space-y-6 border-3 border-purple-300">
+                        <h3 className="text-xl sm:text-2xl font-black text-purple-950 leading-snug">{currentQ.question}</h3>
+
+                        {currentQ.type === 'multiple' && (
+                            <div className="space-y-3">
+                                {currentQ.options.map((opt, idx) => (
+                                    <button 
+                                        key={idx}
+                                        onClick={() => handleAnswerSelect(currentQ.id, idx)}
+                                        className={`w-full p-4 rounded-2xl text-left font-bold transition-all flex items-center justify-between border-2 ${
+                                            currentAns === idx ? 'bg-gradient-to-r from-pink-500 to-purple-600 text-white border-purple-600' : 'bg-white text-purple-900 border-pink-200'
+                                        }`}
+                                    >
+                                        <span>{idx + 1}. {opt}</span>
+                                        {currentAns === idx && <span>💖</span>}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {currentQ.type === 'ox' && (
+                            <div className="grid grid-cols-2 gap-4">
+                                {['O', 'X'].map((choice) => (
+                                    <button 
+                                        key={choice}
+                                        onClick={() => handleAnswerSelect(currentQ.id, choice)}
+                                        className={`py-8 rounded-3xl font-black text-4xl border-4 ${
+                                            currentAns === choice ? 'bg-pink-500 text-white border-pink-600' : 'bg-white text-purple-800 border-pink-200'
+                                        }`}
+                                    >
+                                        {choice === 'O' ? '🌸 O' : '❌ X'}
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+
+                        {currentQ.type === 'short' && (
+                            <input 
+                                type="text"
+                                placeholder="답안을 입력해 주세요..."
+                                value={currentAns || ''}
+                                onChange={(e) => handleAnswerSelect(currentQ.id, e.target.value)}
+                                className="w-full px-5 py-4 rounded-2xl border-3 border-pink-300 font-bold text-lg bg-white"
+                            />
+                        )}
+
+                        <div className="flex justify-between items-center pt-4 border-t border-pink-200">
+                            <button 
+                                onClick={() => setCurrentQIndex(prev => Math.max(0, prev - 1))}
+                                disabled={currentQIndex === 0}
+                                className="px-4 py-2.5 btn-manggae-secondary rounded-2xl font-bold text-sm disabled:opacity-50"
+                            >
+                                ⬅️ 이전
+                            </button>
+
+                            {isLastQuestion ? (
+                                <button onClick={handleFinishQuiz} className="px-6 py-3 btn-manggae-primary rounded-2xl font-black text-base">
+                                    ✨ 제출 및 결과 보기! 🎉
+                                </button>
+                            ) : (
+                                <button onClick={() => setCurrentQIndex(prev => Math.min(questions.length - 1, prev + 1))} className="px-5 py-2.5 btn-manggae-primary rounded-2xl font-black text-sm">
+                                    다음 ➡️
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function QuizResultView({ lastSubmission, submissions, setView }) {
+            const top3Submissions = [...submissions].sort((a, b) => b.score - a.score).slice(0, 3);
+
+            return (
+                <div className="space-y-6 my-auto max-w-2xl mx-auto w-full">
+                    <div className="glass-panel p-6 sm:p-8 rounded-3xl text-center space-y-4 border-4 border-pink-300">
+                        <div className="text-5xl animate-bounce-soft">🎉💖✨</div>
+                        <h2 className="text-3xl font-black text-purple-900">
+                            퀴즈 수고하셨습니다, <span className="text-pink-600">{lastSubmission?.userName}</span>님!
+                        </h2>
+                        <div className="bg-pink-100 p-6 rounded-2xl border-2 border-pink-200 inline-block w-full max-w-sm">
+                            <div className="text-xs font-bold text-purple-600">최종 취득 점수</div>
+                            <div className="text-5xl font-black text-pink-600 my-1">
+                                {lastSubmission?.score} <span className="text-2xl font-extrabold text-purple-800">/ {lastSubmission?.totalScore}점</span>
+                            </div>
+                        </div>
+                        <div>
+                            <button onClick={() => setView('home')} className="px-6 py-3 btn-manggae-secondary rounded-2xl font-black text-sm">
+                                🏠 메인으로 돌아가기
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="glass-panel p-6 rounded-3xl border-2 border-purple-200">
+                        <h3 className="text-xl font-black text-purple-900 mb-4">🏆 명예의 전당 (TOP 3)</h3>
+                        <div className="space-y-3">
+                            {top3Submissions.map((sub, idx) => (
+                                <div key={sub.id || idx} className="p-4 rounded-2xl border-2 flex items-center justify-between bg-white/80 border-purple-100">
+                                    <div className="flex items-center gap-3">
+                                        <span className="font-black text-sm px-2.5 py-1 bg-purple-100 text-purple-700 rounded-xl">{['🥇 1등', '🥈 2등', '🥉 3등'][idx]}</span>
+                                        <span className="font-extrabold text-lg text-purple-950">{sub.userName}</span>
+                                    </div>
+                                    <div className="text-xl font-black text-pink-600">{sub.score}점</div>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AdminDashboardView({ questions, setQuestions, submissions, setSubmissions, adminPassword, setAdminPasswordState, showAlert }) {
+            const [adminTab, setAdminTab] = useState('questions');
+            const [showAddModal, setShowAddModal] = useState(false);
+            const [editingQ, setEditingQ] = useState(null);
+            const [selectedSubForDetail, setSelectedSubForDetail] = useState(null);
+            const [newPasswordInput, setNewPasswordInput] = useState('');
+
+            // Question Editor State
+            const [qType, setQType] = useState('multiple');
+            const [qTitle, setQTitle] = useState('');
+            const [qScore, setQScore] = useState(20);
+            const [qExplanation, setQExplanation] = useState('');
+            const [qOptions, setQOptions] = useState(['선택지 1', '선택지 2', '선택지 3', '선택지 4']);
+            const [qCorrectMultiple, setQCorrectMultiple] = useState(0);
+            const [qCorrectOX, setQCorrectOX] = useState('O');
+            const [qCorrectShort, setQCorrectShort] = useState('');
+
+            const openAddModal = (qToEdit = null) => {
+                if (qToEdit) {
+                    setEditingQ(qToEdit);
+                    setQType(qToEdit.type);
+                    setQTitle(qToEdit.question);
+                    setQScore(qToEdit.score || 20);
+                    setQExplanation(qToEdit.explanation || '');
+                    if (qToEdit.type === 'multiple') {
+                        setQOptions([...(qToEdit.options || ['선택지 1', '선택지 2'])]);
+                        setQCorrectMultiple(qToEdit.correctAnswer || 0);
+                    } else if (qToEdit.type === 'ox') {
+                        setQCorrectOX(qToEdit.correctAnswer || 'O');
+                    } else if (qToEdit.type === 'short') {
+                        setQCorrectShort(Array.isArray(qToEdit.correctAnswer) ? qToEdit.correctAnswer.join(', ') : (qToEdit.correctAnswer || ''));
+                    }
+                } else {
+                    setEditingQ(null);
+                    setQType('multiple');
+                    setQTitle('');
+                    setQScore(20);
+                    setQExplanation('');
+                    setQOptions(['선택지 1', '선택지 2', '선택지 3', '선택지 4']);
+                    setQCorrectMultiple(0);
+                    setQCorrectOX('O');
+                    setQCorrectShort('');
+                }
+                setShowAddModal(true);
+            };
+
+            const handleSaveQuestion = (e) => {
+                e.preventDefault();
+                if (!qTitle.trim()) return;
+
+                let finalCorrectAnswer = qType === 'multiple' ? Number(qCorrectMultiple) : qType === 'ox' ? qCorrectOX : qCorrectShort.split(',').map(s => s.trim()).filter(Boolean);
+
+                const newQuestionData = {
+                    id: editingQ ? editingQ.id : Date.now(),
+                    type: qType,
+                    question: qTitle.trim(),
+                    score: Number(qScore) || 10,
+                    explanation: qExplanation.trim(),
+                    options: qType === 'multiple' ? qOptions : (qType === 'ox' ? ['O', 'X'] : []),
+                    correctAnswer: finalCorrectAnswer
+                };
+
+                setQuestions(prev => {
+                    const exists = prev.some(q => q.id === newQuestionData.id);
+                    if (exists) return prev.map(q => q.id === newQuestionData.id ? newQuestionData : q);
+                    return [...prev, newQuestionData];
+                });
+
+                setShowAddModal(false);
+                showAlert('문제 저장 완료! 🌸', 'success');
+            };
+
+            const handleDeleteQuestion = (id) => {
+                setQuestions(prev => prev.filter(q => q.id !== id));
+                showAlert('문제가 삭제되었습니다.', 'info');
+            };
+
+            const handleChangePassword = (e) => {
+                e.preventDefault();
+                if (!newPasswordInput.trim()) return;
+                setAdminPasswordState(newPasswordInput.trim());
+                setNewPasswordInput('');
+                showAlert('관리자 비밀번호가 새로 변경되었습니다! 🔑', 'success');
+            };
+
+            const handleClearSubmissions = () => {
+                if (!confirm('정말로 모든 제출 기록을 초기화하시겠습니까?')) return;
+                setSubmissions([]);
+                showAlert('모든 기록이 초기화되었습니다.', 'info');
+            };
+
+            return (
+                <div className="space-y-6">
+                    {/* Admin Navigation Tabs */}
+                    <div className="glass-panel p-2 rounded-2xl flex gap-2 border-2 border-purple-300">
+                        <button onClick={() => setAdminTab('questions')} className={`flex-1 py-2.5 rounded-xl font-bold text-xs sm:text-sm ${adminTab === 'questions' ? 'bg-manggae-purple text-white' : 'text-purple-800'}`}>
+                            ✏️ 문제 관리 ({questions.length})
+                        </button>
+                        <button onClick={() => setAdminTab('results')} className={`flex-1 py-2.5 rounded-xl font-bold text-xs sm:text-sm ${adminTab === 'results' ? 'bg-manggae-purple text-white' : 'text-purple-800'}`}>
+                            📊 참여 로그 ({submissions.length})
+                        </button>
+                        <button onClick={() => setAdminTab('settings')} className={`flex-1 py-2.5 rounded-xl font-bold text-xs sm:text-sm ${adminTab === 'settings' ? 'bg-manggae-purple text-white' : 'text-purple-800'}`}>
+                            ⚙️ 설정
+                        </button>
+                    </div>
+
+                    {/* Tab 1: Question Management */}
+                    {adminTab === 'questions' && (
+                        <div className="space-y-4">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-xl font-black text-purple-900">퀴즈 목록</h3>
+                                <button onClick={() => openAddModal(null)} className="px-4 py-2.5 btn-manggae-primary rounded-xl font-bold text-sm">
+                                    ➕ 새 문제 추가하기
+                                </button>
+                            </div>
+
+                            <div className="space-y-3">
+                                {questions.map((q, idx) => (
+                                    <div key={q.id} className="glass-panel p-5 rounded-2xl border-2 border-pink-200 flex justify-between items-center gap-4">
+                                        <div className="space-y-1">
+                                            <div className="flex items-center gap-2 text-xs font-bold text-purple-700">
+                                                <span className="bg-purple-100 px-2 py-0.5 rounded-full">Q{idx + 1}</span>
+                                                <span className="text-pink-500 font-extrabold">{q.score}점</span>
+                                                <span className="text-gray-500">[{q.type === 'multiple' ? '객관식' : q.type === 'ox' ? 'O/X' : '서술형'}]</span>
+                                            </div>
+                                            <p className="font-extrabold text-purple-950 text-lg leading-snug">{q.question}</p>
+                                        </div>
+                                        <div className="flex gap-2 shrink-0">
+                                            <button onClick={() => openAddModal(q)} className="px-3 py-1.5 bg-purple-100 text-purple-700 rounded-xl font-bold text-xs hover:bg-purple-200">✏️ 수정</button>
+                                            <button onClick={() => handleDeleteQuestion(q.id)} className="px-3 py-1.5 bg-red-100 text-red-600 rounded-xl font-bold text-xs hover:bg-red-200">🗑️ 삭제</button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tab 2: Submissions Log */}
+                    {adminTab === 'results' && (
+                        <div className="glass-panel p-6 rounded-3xl space-y-4 border-2 border-purple-200">
+                            <div className="flex justify-between items-center">
+                                <h3 className="text-xl font-black text-purple-900">📊 전체 참여자 제출 현황 ({submissions.length}명)</h3>
+                                {submissions.length > 0 && (
+                                    <button onClick={handleClearSubmissions} className="px-3 py-1.5 bg-red-100 text-red-600 rounded-xl font-bold text-xs">
+                                        🚨 기록 전체 삭제
+                                    </button>
+                                )}
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b-2 border-pink-200 text-xs font-black text-purple-700">
+                                            <th className="p-3">순위</th>
+                                            <th className="p-3">이름</th>
+                                            <th className="p-3">점수</th>
+                                            <th className="p-3">제출 시간</th>
+                                            <th className="p-3 text-right">상세 답안</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-pink-100">
+                                        {[...submissions].sort((a, b) => b.score - a.score).map((sub, index) => (
+                                            <tr key={sub.id || index} className="hover:bg-pink-50/50">
+                                                <td className="p-3 font-black text-sm">{index + 1}위</td>
+                                                <td className="p-3 font-bold text-purple-900">{sub.userName}</td>
+                                                <td className="p-3 font-black text-pink-600">{sub.score} / {sub.totalScore}점</td>
+                                                <td className="p-3 text-xs text-gray-500">{sub.submittedAt}</td>
+                                                <td className="p-3 text-right">
+                                                    <button onClick={() => setSelectedSubForDetail(sub)} className="px-3 py-1.5 bg-purple-600 text-white rounded-xl text-xs font-bold shadow hover:bg-purple-700">
+                                                        🔍 답안 보기
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Tab 3: Admin Settings */}
+                    {adminTab === 'settings' && (
+                        <div className="glass-panel p-6 rounded-3xl space-y-6 border-2 border-purple-200 max-w-md mx-auto">
+                            <h3 className="text-xl font-black text-purple-900 text-center">🔑 관리자 비밀번호 변경</h3>
+                            <form onSubmit={handleChangePassword} className="space-y-4">
+                                <div>
+                                    <label className="block text-xs font-bold text-purple-700 mb-1">새 관리자 비밀번호</label>
+                                    <input 
+                                        type="text" 
+                                        placeholder="새 비밀번호 입력..." 
+                                        value={newPasswordInput}
+                                        onChange={(e) => setNewPasswordInput(e.target.value)}
+                                        className="w-full p-3 border-2 border-pink-300 rounded-xl font-bold text-center"
+                                        required
+                                    />
+                                </div>
+                                <button type="submit" className="w-full py-3 btn-manggae-primary rounded-xl font-bold">
+                                    비밀번호 변경 완료 💖
+                                </button>
+                            </form>
+                        </div>
+                    )}
+
+                    {/* Modal: Detailed Answer Viewer */}
+                    {selectedSubForDetail && (
+                        <div className="fixed inset-0 bg-purple-950/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="glass-panel max-w-lg w-full p-6 rounded-3xl space-y-4 max-h-[85vh] overflow-y-auto">
+                                <div className="flex justify-between items-center border-b border-pink-200 pb-3">
+                                    <div>
+                                        <h3 className="text-xl font-black text-purple-950">🔍 {selectedSubForDetail.userName} 님의 제출 기록</h3>
+                                        <span className="text-xs text-purple-600 font-bold">점수: {selectedSubForDetail.score}점 ({selectedSubForDetail.submittedAt})</span>
+                                    </div>
+                                    <button onClick={() => setSelectedSubForDetail(null)} className="text-gray-400 font-bold text-xl">✕</button>
+                                </div>
+                                <div className="space-y-3">
+                                    {questions.map((q, idx) => {
+                                        const ans = selectedSubForDetail.answers ? selectedSubForDetail.answers[q.id] : null;
+                                        const isCorrect = ans?.isCorrect;
+                                        return (
+                                            <div key={q.id} className={`p-3.5 rounded-2xl border-2 ${isCorrect ? 'bg-green-50 border-green-300' : 'bg-red-50 border-red-300'}`}>
+                                                <div className="flex justify-between text-xs font-bold mb-1">
+                                                    <span className="text-purple-800">Q{idx + 1}. {q.question}</span>
+                                                    <span className={isCorrect ? 'text-green-600' : 'text-red-500'}>
+                                                        {isCorrect ? `⭕ 정답 (+${q.score}점)` : '❌ 오답 (0점)'}
+                                                    </span>
+                                                </div>
+                                                <div className="text-xs text-gray-700">
+                                                    선택/작성한 답: <span className="font-black text-purple-900">{ans?.userAns !== undefined ? String(ans.userAns) : '(미응답)'}</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <button onClick={() => setSelectedSubForDetail(null)} className="w-full py-2.5 btn-manggae-secondary rounded-xl font-bold">닫기</button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Modal: Question Add & Edit */}
+                    {showAddModal && (
+                        <div className="fixed inset-0 bg-purple-950/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                            <div className="glass-panel max-w-xl w-full p-6 rounded-3xl space-y-4 max-h-[90vh] overflow-y-auto">
+                                <h3 className="text-xl font-black text-purple-900">{editingQ ? '✏️ 문제 수정' : '➕ 새 퀴즈 추가'}</h3>
+                                <form onSubmit={handleSaveQuestion} className="space-y-4">
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {[
+                                            { type: 'multiple', label: '객관식' },
+                                            { type: 'ox', label: 'O/X' },
+                                            { type: 'short', label: '서술형' }
+                                        ].map(item => (
+                                            <button key={item.type} type="button" onClick={() => setQType(item.type)} className={`py-2 rounded-xl text-xs font-bold ${qType === item.type ? 'bg-purple-600 text-white' : 'bg-gray-100 text-gray-700'}`}>
+                                                {item.label}
+                                            </button>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        <label className="block text-xs font-bold text-purple-800 mb-1">문제 질문 내용</label>
+                                        <input type="text" placeholder="예: 망개떡의 겉을 싸고 있는 잎은?" value={qTitle} onChange={(e) => setQTitle(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl font-bold text-sm" required />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-3">
+                                        <div>
+                                            <label className="block text-xs font-bold text-purple-800 mb-1">배점</label>
+                                            <input type="number" placeholder="배점" value={qScore} onChange={(e) => setQScore(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl font-bold text-sm" />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-bold text-purple-800 mb-1">해설 (선택)</label>
+                                            <input type="text" placeholder="해설" value={qExplanation} onChange={(e) => setQExplanation(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl font-bold text-sm" />
+                                        </div>
+                                    </div>
+
+                                    {qType === 'multiple' && (
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-bold text-purple-800">선택지 목록 (라디오 버튼으로 정답 선택)</label>
+                                            {qOptions.map((opt, idx) => (
+                                                <div key={idx} className="flex gap-2 items-center">
+                                                    <input type="radio" name="correctOpt" checked={qCorrectMultiple === idx} onChange={() => setQCorrectMultiple(idx)} className="w-4 h-4 accent-purple-600 cursor-pointer" />
+                                                    <input type="text" value={opt} onChange={(e) => { const u = [...qOptions]; u[idx] = e.target.value; setQOptions(u); }} className="flex-grow p-2 border rounded-xl font-bold text-sm" required />
+                                                    {qOptions.length > 2 && (
+                                                        <button type="button" onClick={() => setQOptions(qOptions.filter((_, i) => i !== idx))} className="text-red-500 font-bold text-sm px-1">✕</button>
+                                                    )}
+                                                </div>
+                                            ))}
+                                            <button type="button" onClick={() => setQOptions([...qOptions, `선택지 ${qOptions.length + 1}`])} className="text-xs font-bold text-pink-600 hover:underline">+ 선택지 추가하기</button>
+                                        </div>
+                                    )}
+
+                                    {qType === 'ox' && (
+                                        <div>
+                                            <label className="block text-xs font-bold text-purple-800 mb-1">정답 선택</label>
+                                            <div className="flex gap-4">
+                                                {['O', 'X'].map(choice => (
+                                                    <button key={choice} type="button" onClick={() => setQCorrectOX(choice)} className={`flex-1 py-3 rounded-xl font-black text-xl border-2 ${qCorrectOX === choice ? 'bg-pink-500 text-white border-pink-600' : 'bg-white text-purple-900 border-gray-200'}`}>
+                                                        {choice}
+                                                    </button>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {qType === 'short' && (
+                                        <div>
+                                            <label className="block text-xs font-bold text-purple-800 mb-1">정답 단어 (쉼표로 구분하여 여러 개 등록 가능)</label>
+                                            <input type="text" placeholder="예: 팥, 팥앙금, 팥소" value={qCorrectShort} onChange={(e) => setQCorrectShort(e.target.value)} className="w-full p-3 border-2 border-pink-300 rounded-xl font-bold text-sm" required />
+                                        </div>
+                                    )}
+
+                                    <div className="flex gap-2 pt-2">
+                                        <button type="button" onClick={() => setShowAddModal(false)} className="w-1/2 py-2.5 btn-manggae-secondary rounded-xl font-bold">취소</button>
+                                        <button type="submit" className="w-1/2 py-2.5 btn-manggae-primary rounded-xl font-bold">저장하기 💖</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
